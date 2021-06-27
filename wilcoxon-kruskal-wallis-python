@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.stats import levene
 from scipy.stats import shapiro
 from scipy.stats import wilcoxon
 from scipy.stats import kruskal
-from  scipy.stats import spearmanr
 
 df= pd.read_csv("drugData.csv")
 
@@ -28,37 +26,19 @@ print("once ortalama: {0},  sonra ortalama: {1}".format(once.mean(),sonra.mean()
 
 
 """
-oncesi_=pd.concat([oncesi_grup,once],axis=1)
-
-#print(oncesi_)
-
-sonra_=pd.concat([sonra_grup,sonra],axis=1)
-
-final= pd.concat([oncesi_,sonra_],axis=0)
-print(final)
+A index => 0-67
+S index => 68-133
+T index => 134-
 """
 
 
-"""
-#Drugs
-A= df["Drug"][:66]
-S= df["Drug"][67:133]
-T= df["Drug"][134:]
-A_= pd.concat([A,df["Mem_Score_Before"][:66]],axis=1)
-A_final= pd.concat([A_,df["Mem_Score_After"][:66]],axis=1)
-S_= pd.concat([S,df["Mem_Score_Before"][67:133]],axis=1)
-S_final= pd.concat([S_,df["Mem_Score_After"][67:133]],axis=1)
-T_= pd.concat([T,df["Mem_Score_Before"][134:]],axis=1)
-T_final= pd.concat([T_,df["Mem_Score_After"][134:]],axis=1)
-A_T_S= pd.concat([A_final,T_final,S_final],axis=0)
-"""
 
 A_alt= df[:67].drop(["age","Happy_Sad_group","Dosage","Drug","Mem_Score_Before","Mem_Score_After"],axis=1)
 A_alt= np.array(A_alt)
 A_alt1= pd.DataFrame(A_alt)
 
 
-S_alt= df[67:133].drop(["age","Happy_Sad_group","Dosage","Drug","Mem_Score_Before","Mem_Score_After"],axis=1)
+S_alt= df[68:133].drop(["age","Happy_Sad_group","Dosage","Drug","Mem_Score_Before","Mem_Score_After"],axis=1)
 S_alt= np.array(S_alt)
 S_alt1= pd.DataFrame(S_alt)
 
