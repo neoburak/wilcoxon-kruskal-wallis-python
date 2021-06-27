@@ -1,0 +1,99 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import levene
+from scipy.stats import shapiro
+from scipy.stats import wilcoxon
+from scipy.stats import kruskal
+from  scipy.stats import spearmanr
+
+df= pd.read_csv("drugData.csv")
+
+df.drop(["first_name","last_name"],1,inplace=True)
+
+#print(df.describe())
+
+#print(df.isna().sum())
+
+#print(df.info())
+
+once=df["Mem_Score_Before"].sort_values(ascending=True)
+sonra= df["Mem_Score_After"].sort_values(ascending=True)
+
+once_sonra= pd.concat([once,sonra],axis=1)
+once_sonra.columns= ["önce","sonra"]
+
+print("wilcoxon istatistik: %.2f,pdeğeri %.2f"%wilcoxon(once_sonra["önce"],once_sonra["sonra"]))
+print("once ortalama: {0},  sonra ortalama: {1}".format(once.mean(),sonra.mean()))
+
+
+"""
+oncesi_=pd.concat([oncesi_grup,once],axis=1)
+
+#print(oncesi_)
+
+sonra_=pd.concat([sonra_grup,sonra],axis=1)
+
+final= pd.concat([oncesi_,sonra_],axis=0)
+print(final)
+"""
+
+
+"""
+#Drugs
+A= df["Drug"][:66]
+S= df["Drug"][67:133]
+T= df["Drug"][134:]
+A_= pd.concat([A,df["Mem_Score_Before"][:66]],axis=1)
+A_final= pd.concat([A_,df["Mem_Score_After"][:66]],axis=1)
+S_= pd.concat([S,df["Mem_Score_Before"][67:133]],axis=1)
+S_final= pd.concat([S_,df["Mem_Score_After"][67:133]],axis=1)
+T_= pd.concat([T,df["Mem_Score_Before"][134:]],axis=1)
+T_final= pd.concat([T_,df["Mem_Score_After"][134:]],axis=1)
+A_T_S= pd.concat([A_final,T_final,S_final],axis=0)
+"""
+
+A_alt= df[:67].drop(["age","Happy_Sad_group","Dosage","Drug","Mem_Score_Before","Mem_Score_After"],axis=1)
+A_alt= np.array(A_alt)
+A_alt1= pd.DataFrame(A_alt)
+
+
+S_alt= df[67:133].drop(["age","Happy_Sad_group","Dosage","Drug","Mem_Score_Before","Mem_Score_After"],axis=1)
+S_alt= np.array(S_alt)
+S_alt1= pd.DataFrame(S_alt)
+
+
+T_alt=df[134:].drop(["age","Happy_Sad_group","Dosage","Drug","Mem_Score_Before","Mem_Score_After"],axis=1)
+T_alt= np.array(T_alt)
+T_alt1= pd.DataFrame(T_alt)
+
+liste= [A_alt1,S_alt1,T_alt1]
+
+A_T_S_alt=pd.concat(liste,axis=1)
+A_T_S_alt.columns = ["A","S","T"]
+
+veri =A_T_S_alt[:64]
+
+statA, pvalueA= shapiro(veri["A"])
+print("A ilacı istatistik %.2f, A ilacı p %.2f"%(statA,pvalueA))
+
+statS, pvalueS = shapiro(veri["S"])
+print("S ilacı istatistik %.2f, S ilacı p %.2f"%(statS,pvalueS))
+
+statT, pvalueT = shapiro(veri["T"])
+print("T ilacı istatistik %.2f, T ilacı T %.2f"%(statT,pvalueT))
+#hiçbiri normal dağılmamış
+
+
+stat_lvn,pvalue_lvn = levene(veri["A"],veri["S"],veri["T"])
+print("Levene istatistik %.2f, Levene p %.2f"%(stat_lvn,pvalue_lvn))
+#varyanslar homojen değil
+
+#kruksal valis: non paramaterik gruplar arası fark testi istatistiksel olarak anlamlıdır.
+
+kruksal_stat,p_kruksal= kruskal(veri["A"],veri["S"],veri["T"])
+print("Kruksal istatistik %.2f, Kruksal p %.2f"%(kruksal_stat,p_kruksal))
+
+
+
+
